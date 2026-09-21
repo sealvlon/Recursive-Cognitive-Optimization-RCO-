@@ -1,0 +1,32 @@
+name: Checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.14'
+          architecture: x64
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            requirements-dev.txt
+      - name: Install dependencies
+        run: python -m pip install -r requirements-dev.txt
+      - name: Check release fixtures and package behavior
+        run: python -m unittest discover -s tests -v
+      - name: Check desktop transport and skill setup
+        run: python -m unittest middleware.desktop.test_desktop middleware.tests.test_desktop_setup middleware.desktop.test_setup_wizard

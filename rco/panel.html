@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RCO</title>
+<style>
+  :root { --bg:#f3f4f6; --card:#fff; --ink:#111827; --mute:#6b7280; --line:#e5e7eb; --blue:#2563eb; --green:#16a34a;
+          --amber:#d97706; --red:#dc2626; --gray:#9ca3af; --soft:#eff6ff; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  header { display:flex; align-items:center; gap:14px; padding:10px 18px; background:#fff; border-bottom:1px solid var(--line); position:sticky; top:0; z-index:5; flex-wrap:wrap; }
+  .brand { font-weight:700; font-size:18px; letter-spacing:.3px; }
+  .brand small { color:var(--mute); font-weight:400; margin-left:6px; }
+  .pill { display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px; font-size:12.5px; border:1px solid var(--line); background:#fff; white-space:nowrap; }
+  .dot { width:9px; height:9px; border-radius:50%; background:var(--gray); display:inline-block; }
+  .dot.on { background:var(--green); } .dot.warn { background:var(--amber); } .dot.off { background:var(--red); }
+  main { display:grid; grid-template-columns: minmax(340px,1fr) minmax(360px,1.15fr); gap:16px; padding:16px 18px 0; }
+  @media (max-width:900px){ main { grid-template-columns:1fr; } }
+  .col { display:flex; flex-direction:column; gap:14px; min-width:0; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 16px; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  .card h3 { margin:0 0 10px; font-size:13px; text-transform:uppercase; letter-spacing:.6px; color:var(--mute); }
+  .card.warn { border-color:#fcd34d; background:#fffbeb; }
+  .card.live { border-color:#93c5fd; background:var(--soft); }
+  .card.paused { border-color:#fca5a5; background:#fef2f2; }
+  textarea, input[type=text] { width:100%; border:1px solid #d1d5db; border-radius:8px; padding:8px 10px; font:inherit; background:#fff; }
+  textarea { min-height:86px; resize:vertical; }
+  .row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .row.between { justify-content:space-between; }
+  button { border:1px solid #d1d5db; background:#fff; color:var(--ink); border-radius:8px; padding:7px 12px; font:inherit; cursor:pointer; }
+  button:hover { background:#f9fafb; } button:disabled { opacity:.45; cursor:default; }
+  button.primary { background:var(--blue); border-color:var(--blue); color:#fff; font-weight:600; }
+  button.primary:hover { background:#1d4ed8; }
+  button.danger { color:var(--red); border-color:#fecaca; } button.danger:hover { background:#fef2f2; }
+  button.big { padding:11px 16px; font-size:15px; }
+  .chips { display:flex; gap:6px; flex-wrap:wrap; }
+  .chip { border-radius:999px; padding:5px 12px; border:1px solid #d1d5db; background:#fff; cursor:pointer; font-size:13px; }
+  .chip.sel { background:var(--ink); color:#fff; border-color:var(--ink); }
+  .client { padding:9px 14px; font-weight:600; }
+  .client.sel { background:var(--blue); border-color:var(--blue); color:#fff; }
+  label.inline { display:inline-flex; gap:6px; align-items:center; margin-right:10px; font-size:13px; }
+  .mute { color:var(--mute); } .small { font-size:12.5px; } .mono { font-family:ui-monospace,Consolas,monospace; }
+  .banner { font-size:17px; font-weight:600; margin:6px 0 10px; }
+  .banner code { background:#dbeafe; padding:2px 8px; border-radius:6px; font-size:16px; }
+  .turn { border:1px solid var(--line); border-radius:10px; margin-bottom:8px; overflow:hidden; }
+  .turn .head { display:flex; gap:10px; align-items:center; padding:9px 12px; cursor:pointer; background:#fafafa; }
+  .turn .head:hover { background:#f3f4f6; }
+  .turn .body { padding:10px 12px; border-top:1px solid var(--line); }
+  .st { font-size:11px; font-weight:700; letter-spacing:.5px; padding:2px 7px; border-radius:6px; color:#fff; background:var(--gray); }
+  .st.offered,.st.leased { background:var(--amber); } .st.claimed { background:var(--blue); } .st.submitted { background:var(--green); }
+  .st.broken { background:var(--red); }
+  pre.text { white-space:pre-wrap; word-break:break-word; margin:0; font:13px/1.5 ui-monospace,Consolas,monospace; max-height:420px; overflow:auto; background:#f9fafb; padding:10px; border-radius:8px; }
+  .console { margin:16px 18px 24px; }
+  #log { white-space:pre-wrap; word-break:break-word; margin:0 0 8px; font:12.5px/1.5 ui-monospace,Consolas,monospace; background:#0f172a; color:#e2e8f0; padding:12px; border-radius:8px; max-height:260px; overflow:auto; }
+  #log .warn { color:#fbbf24; } #log .err { color:#f87171; } #log .turn { color:#93c5fd; } #log .panel { color:#a7f3d0; }
+  #toast { position:fixed; right:18px; bottom:18px; max-width:520px; background:#111827; color:#fff; padding:10px 14px; border-radius:10px; font-size:13px; white-space:pre-wrap; display:none; z-index:9; box-shadow:0 8px 24px rgba(0,0,0,.25); }
+  .task { white-space:pre-wrap; background:#f9fafb; border-radius:8px; padding:8px 10px; max-height:140px; overflow:auto; font-size:13px; }
+  .kv { color:var(--mute); font-size:12.5px; }
+  [hidden] { display:none !important; }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">RCO<small>operator panel</small></div>
+  <span id="hubpill" class="pill"><span class="dot"></span><span>connecting…</span></span>
+  <span id="clients" class="row"></span>
+  <span id="quorum" class="pill"></span>
+  <span class="pill mono small" id="uptime"></span>
+</header>
+
+<main>
+  <section class="col">
+    <div id="waitcard" class="card warn" hidden>
+      <h3>Not ready</h3>
+      <div id="waittext"></div>
+    </div>
+
+    <div id="pausecard" class="card paused" hidden>
+      <h3>Paused</h3>
+      <div class="row between"><div id="pausetext"></div><button class="primary" onclick="cmd('resume')">Resume</button></div>
+    </div>
+
+    <div id="runcard" class="card">
+      <div id="norun">
+        <h3>Open a run</h3>
+        <div id="proposal" class="row between" hidden style="margin-bottom:10px">
+          <div><b id="proposalfrom"></b> proposes: <span id="proposaltask"></span></div>
+          <button class="primary" onclick="cmd('run')">Accept proposal</button>
+        </div>
+        <textarea id="task" placeholder="What are the two models working on? (the task text of the run)"></textarea>
+        <div class="row" style="margin-top:8px"><button class="primary big" onclick="openRun()">Open run</button>
+          <span class="mute small">Both apps must be connected first.</span></div>
+      </div>
+      <div id="hasrun" hidden>
+        <div class="row between"><h3 style="margin:0">Run <span id="runid"></span></h3><span id="runmeta" class="kv"></span></div>
+        <div id="runtask" class="task" style="margin:8px 0 10px"></div>
+        <div class="row">
+          <button onclick="cmd('pause')" id="btnpause">Pause</button>
+          <button onclick="askInline('note')">Add note</button>
+          <button class="danger" onclick="askInline('end')">End run</button>
+          <span class="mute small" id="rundir"></span>
+        </div>
+        <div id="inline" class="row" hidden style="margin-top:8px">
+          <input type="text" id="inlinetext" style="flex:1" onkeydown="if(event.key==='Enter'){confirmInline();return false}">
+          <button class="primary" onclick="confirmInline()" id="inlinebtn">OK</button>
+          <button onclick="$('inline').hidden=true">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="decide" class="card" hidden>
+      <h3>Decide the next turn</h3>
+      <div class="row" style="margin-bottom:10px"><span class="mute small" style="width:64px">Who</span><span id="clientbtns" class="row"></span></div>
+      <div class="row" id="skillrow" style="margin-bottom:10px"><span class="mute small" style="width:64px">Skill</span>
+        <span id="skillchips" class="chips"></span>
+        <span class="mute small">Pick a skill, then its agent; the packet carries the skill and that agent's instructions.</span></div>
+      <div class="row" style="margin-bottom:10px"><span class="mute small" style="width:64px" id="rolelabel">Role</span>
+        <span id="rolechips" class="chips"></span>
+        <input type="text" id="rolecustom" placeholder="other (one word)" style="width:150px"></div>
+      <div class="row" style="margin-bottom:10px; align-items:flex-start"><span class="mute small" style="width:64px">Include</span>
+        <span id="includes"></span></div>
+      <div style="margin-bottom:10px"><textarea id="note" placeholder="Your instructions for this turn (optional)" style="min-height:64px"></textarea></div>
+      <div class="row"><button class="primary big" id="sendturn" onclick="sendTurn()">Send turn</button></div>
+    </div>
+
+    <div id="livecard" class="card live" hidden>
+      <h3>Live turn <span id="liveid"></span> <span id="livest" class="st"></span></h3>
+      <div id="livebanner" class="banner"></div>
+      <div class="row">
+        <button id="copycmd" onclick="copyCmd()">Copy command</button>
+        <button class="danger" onclick="recallLive()">Recall turn</button>
+        <span id="liveage" class="mute small"></span>
+      </div>
+    </div>
+
+    <div id="stopcard" class="card warn" hidden>
+      <h3>Stop confirmation</h3>
+      <div id="stoptext" style="margin-bottom:8px"></div>
+      <button class="primary" onclick="cmd('stopped')">I pressed Stop in that app</button>
+    </div>
+  </section>
+
+  <section class="col">
+    <div class="card">
+      <div class="row between"><h3>Turns</h3><span id="turncount" class="kv"></span></div>
+      <div id="turns"><div class="mute small">No turns yet.</div></div>
+    </div>
+  </section>
+</main>
+
+<section class="card console">
+  <div class="row between"><h3 style="margin:0">Hub console</h3><button onclick="toggleLog()" id="logbtn">Hide</button></div>
+  <pre id="log"></pre>
+  <form id="rawform" class="row" onsubmit="return sendRaw()">
+    <input type="text" id="raw" placeholder="Type a console command (help, status, next c propose -- …). Buttons above do the same." style="flex:1">
+    <button>Send</button>
+  </form>
+</section>
+<div id="toast"></div>
+
+<script>
+'use strict';
+const qs = new URLSearchParams(location.search);
+let token = qs.get('t') || sessionStorage.getItem('rco_t') || '';
+if (qs.get('t')) { try { sessionStorage.setItem('rco_t', token); } catch (e) {} history.replaceState(null, '', location.pathname); }
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const hms = ts => { if (!ts) return ''; const d = new Date(ts); return isNaN(d) ? ts : d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'}); };
+const ago = ts => { if (!ts) return ''; const s = Math.max(0, (Date.now() - new Date(ts).getTime())/1000|0); return s < 60 ? s+' s' : s < 3600 ? (s/60|0)+' min' : (s/3600|0)+' h '+((s%3600)/60|0)+' min'; };
+
+let state = null, lastSeq = 0, sel = {client:null, skill:null, role:null, includes:new Set(), none:false}, decideSig = '', turnSig = '';
+const expanded = new Set(); let editing = null; let pollTimer = null, failures = 0;
+
+async function api(path, opts = {}) {
+  opts.headers = Object.assign({'X-RCO-Panel': token, 'Content-Type': 'application/json'}, opts.headers || {});
+  const r = await fetch(path, opts);
+  if (r.status === 403) { toast('Panel token missing or wrong. Type panel at the hub console and open the address it prints.', 8000); throw new Error('403'); }
+  return r;
+}
+async function poll() {
+  try {
+    const r = await api('/api/state?since=' + lastSeq);
+    const s = await r.json();
+    failures = 0;
+    s.console.forEach(l => appendLog(l.text));
+    lastSeq = s.seq;
+    state = s; render(s);
+  } catch (e) {
+    if (++failures === 3) { $('hubpill').innerHTML = '<span class="dot off"></span><span>hub not reachable (stopped?)</span>'; }
+  }
+  pollTimer = setTimeout(poll, 1000);
+}
+function toast(text, ms = 3500) { const t = $('toast'); t.textContent = text; t.style.display = 'block'; clearTimeout(t._t); t._t = setTimeout(() => t.style.display = 'none', ms); }
+function appendLog(text) {
+  const log = $('log'); const div = document.createElement('div');
+  div.className = text.startsWith('[WARN]') ? 'warn' : text.startsWith('[ERROR]') ? 'err' : /^\[(TURN|RUN)\]/.test(text) ? 'turn' : text.startsWith('[PANEL]') ? 'panel' : '';
+  div.textContent = text; log.appendChild(div);
+  while (log.childElementCount > 1500) log.removeChild(log.firstChild);
+  log.scrollTop = log.scrollHeight;
+}
+function toggleLog() { const l = $('log'), f = $('rawform'); const h = l.hidden = !l.hidden; f.hidden = h; $('logbtn').textContent = h ? 'Show' : 'Hide'; }
+
+async function cmd(line) {
+  try {
+    const r = await api('/api/command', {method:'POST', body: JSON.stringify({line})});
+    const j = await r.json();
+    const shown = (j.lines || []).filter(l => !l.startsWith('[PANEL]'));
+    if (shown.length) toast(shown.join('\n'));
+  } catch (e) { toast('Request failed: ' + e); }
+  clearTimeout(pollTimer); poll();
+}
+function sendRaw() { const v = $('raw').value.trim(); if (v) { cmd(v); $('raw').value = ''; } return false; }
+
+async function openRun() {
+  const task = $('task').value.trim(); if (!task) { toast('Write the task first.'); return; }
+  const r = await api('/api/run', {method:'POST', body: JSON.stringify({task})}); const j = await r.json();
+  const shown = (j.lines || []).filter(l => !l.startsWith('[PANEL]')); if (shown.length) toast(shown.join('\n'));
+  if (!shown.some(l => l.startsWith('[ERROR]') || l.startsWith('[WARN]') || l.startsWith('Usage'))) $('task').value = '';
+  clearTimeout(pollTimer); poll();
+}
+function sendTurn() {
+  if (!sel.client) { toast('Pick who takes the turn.'); return; }
+  const pick = ($('rolecustom').value.trim() || sel.role || '').split(/\s+/)[0];
+  const role = sel.skill ? sel.skill + (pick ? ':' + pick : '') : pick;
+  if (!role) { toast('Pick a role.'); return; }
+  const picks = sel.none ? ['+none'] : [...sel.includes].sort((a,b)=>a-b).map(k => '+T' + k);
+  const note = $('note').value.replace(/\s*\n\s*/g, ' ').trim();
+  cmd(`next ${sel.client} ${role}${picks.length ? ' ' + picks.join(' ') : ''}${note ? ' -- ' + note : ''}`);
+  $('note').value = ''; $('rolecustom').value = '';
+}
+function recallLive() { if (state && state.live && confirm(`Recall ${state.live.id}? If it is already claimed you will need to press Stop in ${state.live.client_name} and confirm here.`)) cmd('recall ' + state.live.id); }
+let inlineKind = null;
+function askInline(kind) {
+  inlineKind = kind; const box = $('inline'), inp = $('inlinetext');
+  inp.placeholder = kind === 'end' ? 'Outcome (optional), e.g. accepted v1 with problem 3 open' : 'Note to record on the run';
+  $('inlinebtn').textContent = kind === 'end' ? 'End run' : 'Record note'; inp.value = ''; box.hidden = false; inp.focus();
+}
+function confirmInline() {
+  const v = $('inlinetext').value.trim(); $('inline').hidden = true;
+  if (inlineKind === 'end') cmd('end' + (v ? ' ' + v : '')); else if (v) cmd('note ' + v);
+}
+function copyCmd() { if (state && state.live) copyText(state.live.turn_command + (state.live.code ? ' ' + state.live.code : '')); }
+function copyText(t) { navigator.clipboard.writeText(t).then(() => toast('Copied: ' + t), () => toast('Copy failed; type it: ' + t)); }
+
+function render(s) {
+  // header
+  $('hubpill').innerHTML = `<span class="dot ${s.paused ? 'warn' : 'on'}"></span><span>${s.paused ? 'hub PAUSED' : 'hub running'}${s.records_healthy ? '' : ' · RECORDS FAILING'}</span>`;
+  $('clients').innerHTML = s.clients.map(c => {
+    const on = c.registered && !c.stale && !c.missing; const cls = c.registered ? (c.stale ? 'warn' : 'on') : 'off';
+    const t = c.registered ? (c.stale ? 'registered, silent' : 'connected') : 'not connected';
+    return `<span class="pill" title="${esc(c.invocation_hint)}"><span class="dot ${cls}"></span>${esc(c.display_name)} <span class="mute">${t}</span></span>`;
+  }).join('');
+  const q = s.quorum; $('quorum').innerHTML = q.ok ? `<span class="dot on"></span>READY ${q.present}/${q.total}` : `<span class="dot warn"></span>WAITING ${q.present}/${q.total}`;
+  $('uptime').textContent = 'up ' + (s.uptime_s/60|0) + ' min';
+  // waiting card
+  $('waitcard').hidden = q.ok;
+  if (!q.ok) $('waittext').innerHTML = s.clients.filter(c => !(c.registered && !c.stale)).map(c => `<div><b>${esc(c.display_name)}</b>: ${esc(c.invocation_hint)}</div>`).join('') + (s.paused ? '<div>The hub is paused.</div>' : '') + '<div class="mute small" style="margin-top:6px">Nothing proceeds single-model.</div>';
+  // pause
+  const runPaused = s.run && s.run.pause_reasons.length;
+  $('pausecard').hidden = !(s.paused || runPaused);
+  $('pausetext').textContent = s.paused ? 'Hub paused by operator.' + (runPaused ? ' Run paused: ' + s.run.pause_reasons.join(', ') : '') : 'Run paused: ' + (runPaused ? s.run.pause_reasons.join(', ') : '');
+  // run
+  $('norun').hidden = !!s.run; $('hasrun').hidden = !s.run;
+  $('proposal').hidden = !s.proposal;
+  if (s.proposal) { $('proposalfrom').textContent = s.proposal.client_name; $('proposaltask').textContent = s.proposal.task; }
+  if (s.run) {
+    $('runid').textContent = s.run.id; $('runtask').textContent = s.run.task;
+    const done = s.turns.filter(t => t.state === 'submitted').length;
+    $('runmeta').textContent = `opened ${hms(s.run.opened_ts)} · ${done} submitted` + (s.run.suspect ? ' · SUSPECT' : '');
+    $('rundir').textContent = s.run.dir; $('btnpause').disabled = !!s.paused;
+  }
+  // decide / live / stop
+  const live = s.live, stop = s.run && s.run.stop_pending;
+  $('stopcard').hidden = !stop;
+  if (stop) { const t = s.turns.find(x => x.id === stop); $('stoptext').innerHTML = `You recalled <b>${esc(stop)}</b> while <b>${esc(t ? t.client_name : '')}</b> was working on it. Press <b>Stop</b> in that app, then confirm.`; }
+  $('livecard').hidden = !live || live.state === 'broken';
+  if (live && live.state !== 'broken') {
+    $('liveid').textContent = live.id + ' · ' + live.role + ' · ' + live.client_name;
+    const st = $('livest'); st.textContent = live.state.toUpperCase(); st.className = 'st ' + live.state;
+    if (live.state === 'claimed') { $('livebanner').innerHTML = `<b>${esc(live.client_name)}</b> is working on it. When it submits, you decide the next step.`; $('liveage').textContent = 'claimed ' + ago(live.claimed_ts) + ' ago'; }
+    else { $('livebanner').innerHTML = `Now: ${esc(live.turn_hint)}${live.code ? ' <code>' + esc(live.code) + '</code>' : ''}`; $('liveage').textContent = 'waiting ' + ago(live.offered_ts); }
+  }
+  const canDecide = s.run && !live && !stop && !s.paused && !runPaused && q.ok;
+  $('decide').hidden = !canDecide;
+  if (canDecide) renderDecide(s);
+  renderTurns(s);
+}
+
+function renderDecide(s, force) {
+  // Rebuilt only when the run's turns change or the operator clicks: a rebuild every poll would race the click.
+  const submitted = s.turns.filter(t => t.state === 'submitted');
+  const skills = s.skills || [];
+  const sig = s.run.id + ':' + s.turns.map(t => t.id + t.state).join(',') + '|' + skills.map(k => k.name).join(',');
+  if (sig !== decideSig) {
+    decideSig = sig; force = true;
+    const last = submitted[submitted.length - 1];
+    const others = s.clients.filter(c => !last || c.id !== last.client);
+    sel.client = (others[0] || s.clients[0]).id;
+    const lastSkill = last && last.skill ? skills.find(k => k.name === last.skill) : null;
+    if (lastSkill) sel.skill = lastSkill.name; else if (!skills.some(k => k.name === sel.skill)) sel.skill = null;
+    const cur = skills.find(k => k.name === sel.skill);
+    sel.role = cur ? (!last && cur.agents.length ? cur.agents[0] : null)
+      : !last ? 'propose' : last.role === 'propose' ? 'challenge' : last.role === 'challenge' ? 'revise' : 'review';
+    sel.includes = new Set(); sel.none = false;
+  }
+  if (!force) return;
+  $('clientbtns').innerHTML = s.clients.map(c => `<button class="client ${sel.client === c.id ? 'sel' : ''}" onclick="sel.client='${esc(c.id)}';renderDecide(state,true)">${esc(c.display_name)}</button>`).join('');
+  $('skillrow').hidden = !skills.length;
+  $('skillchips').innerHTML = skills.map(k => `<button type="button" class="chip ${sel.skill === k.name ? 'sel' : ''}" title="${esc(k.brief)}" aria-label="${esc(k.name)}" aria-pressed="${sel.skill === k.name}" onclick="pickSkill('${esc(k.name)}')">${esc(k.name)}</button>`).join('');
+  const sk = skills.find(k => k.name === sel.skill);
+  $('rolelabel').textContent = sk ? 'Agent' : 'Role';
+  $('rolecustom').placeholder = sk ? 'other agent (one word)' : 'other (one word)';
+  $('rolechips').innerHTML = (sk ? sk.agents : s.roles).map(r => `<button type="button" class="chip ${sel.role === r && !$('rolecustom').value ? 'sel' : ''}" aria-pressed="${sel.role === r}" onclick="sel.role='${esc(r)}';$('rolecustom').value='';renderDecide(state,true)">${esc(r)}</button>`).join('');
+  $('includes').innerHTML = (submitted.length ? submitted.map(t => `<label class="inline"><input type="checkbox" data-k="${t.k}" ${sel.includes.has(t.k) ? 'checked' : ''} onchange="toggleInc(${t.k},this.checked)"> T${t.k} ${esc(t.role)} · ${esc(t.client_name)}</label>`).join('') + `<label class="inline"><input type="checkbox" id="inc-none" ${sel.none ? 'checked' : ''} onchange="toggleNone(this.checked)"> nothing</label><div class="mute small">Unchecked: the hub passes on the latest output only.</div>` : '<span class="mute small">No outputs yet; the packet carries the task and your note.</span>');
+  const who = s.clients.find(c => c.id === sel.client);
+  $('sendturn').textContent = 'Send turn to ' + (who ? who.display_name : '…');
+}
+function pickSkill(n) {
+  const k = (state.skills || []).find(x => x.name === n);
+  if (sel.skill === n) { sel.skill = null; sel.role = null; } else { sel.skill = n; sel.role = k && k.agents.length ? k.agents[0] : null; }
+  $('rolecustom').value = ''; renderDecide(state, true);
+}
+function toggleInc(k, on) { if (on) { sel.includes.add(k); sel.none = false; const n = $('inc-none'); if (n) n.checked = false; } else sel.includes.delete(k); }
+function toggleNone(on) { sel.none = on; if (on) { sel.includes.clear(); document.querySelectorAll('#includes input[data-k]').forEach(i => i.checked = false); } }
+
+function renderTurns(s) {
+  const sig = (s.run ? s.run.id : '') + ':' + s.turns.map(t => t.id + t.state + (t.output_chars||0)).join(',');
+  $('turncount').textContent = s.turns.length ? s.turns.length + ' turn' + (s.turns.length > 1 ? 's' : '') : '';
+  if (sig === turnSig || editing) return;
+  turnSig = sig;
+  if (!s.turns.length) { $('turns').innerHTML = '<div class="mute small">No turns yet.</div>'; return; }
+  $('turns').innerHTML = [...s.turns].reverse().map(t => `
+    <div class="turn" id="turn-${t.id}">
+      <div class="head" onclick="toggleTurn('${t.id}')">
+        <b>${esc(t.id)}</b> <span class="st ${t.state}">${esc(t.state)}</span> <span>${esc(t.role)}</span>${t.skill ? ' <span class="pill small">skill</span>' : ''} <span class="mute">· ${esc(t.client_name)}</span>
+        <span class="mute small" style="margin-left:auto">${t.output_chars != null ? t.output_chars + ' chars · ' : ''}${hms(t.submitted_ts || t.claimed_ts || t.offered_ts)}</span>
+      </div>
+      <div class="body" id="body-${t.id}" ${expanded.has(t.id) ? '' : 'hidden'}>
+        ${t.summary ? `<div style="margin-bottom:8px"><b>${esc(t.summary)}</b></div>` : ''}
+        ${t.note ? `<div class="kv" style="margin-bottom:6px">Your note: ${esc(t.note)}</div>` : ''}
+        <div class="row" style="margin-bottom:8px">
+          ${t.state === 'submitted' ? `<button onclick="showText('${t.id}','output')">Show output</button><button onclick="editOutput('${t.id}')">Edit output</button>` : ''}
+          <button onclick="showText('${t.id}','packet')">Show packet</button>
+          ${t.output_file ? `<span class="mute small mono">${esc(t.output_file)}</span>` : ''}
+        </div>
+        <div id="text-${t.id}"></div>
+      </div>
+    </div>`).join('');
+  expanded.forEach(id => { if (expanded.has(id) && s.turns.find(t => t.id === id && t.state === 'submitted') && !document.querySelector(`#text-${CSS.escape(id)} pre`)) showText(id, 'output'); });
+}
+function toggleTurn(id) { const b = $('body-' + id); b.hidden = !b.hidden; if (b.hidden) expanded.delete(id); else { expanded.add(id); const t = state.turns.find(x => x.id === id); if (t && t.state === 'submitted') showText(id, 'output'); } }
+async function showText(id, kind) {
+  const box = $('text-' + id); box.innerHTML = '<span class="mute small">loading…</span>';
+  const r = await api(`/api/text/${kind}/${id}`); const text = await r.text();
+  box.innerHTML = `<div class="kv" style="margin-bottom:4px">${kind}</div><pre class="text"></pre>`; box.querySelector('pre').textContent = text;
+}
+async function editOutput(id) {
+  const r = await api(`/api/text/output/${id}`); const text = await r.text(); editing = id;
+  const box = $('text-' + id);
+  box.innerHTML = `<div class="kv" style="margin-bottom:4px">Edit the output; the hub passes your version on at the next turn.</div><textarea id="edit-${id}" style="min-height:260px;font-family:ui-monospace,Consolas,monospace"></textarea>
+    <div class="row" style="margin-top:8px"><button class="primary" onclick="saveOutput('${id}')">Save</button><button onclick="editing=null;showText('${id}','output')">Cancel</button></div>`;
+  $('edit-' + id).value = text;
+}
+async function saveOutput(id) {
+  const text = $('edit-' + id).value;
+  const r = await api(`/api/output/${id}`, {method:'PUT', body: JSON.stringify({text})}); const j = await r.json();
+  if (j.ok) { toast(`Saved ${id} (${j.chars} chars). The next turn that includes it gets your edited version.`); } else toast('Not saved: ' + (j.error || r.status));
+  editing = null; turnSig = ''; showText(id, 'output');
+}
+poll();
+</script>
+</body>
+</html>

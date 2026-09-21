@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RCO Desktop — GitHub package</title>
+<style>
+:root{font-family:Segoe UI,system-ui,sans-serif;color:#1f3150;background:#f4f7fc;font-synthesis:none}
+*{box-sizing:border-box}body{margin:0;padding:50px 24px}main{max-width:990px;margin:auto}
+.eyebrow{color:#5968aa;text-transform:uppercase;letter-spacing:2px;font-size:12px;font-weight:700}
+h1{font-size:46px;letter-spacing:-1.5px;line-height:1.1;margin:16px 0}p{line-height:1.7;color:#5a6680}
+.lead{font-size:19px;max-width:710px}.tag{display:inline-block;border-radius:30px;background:#e9e5fb;color:#67569b;padding:7px 13px;font-size:12px}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:30px 0}.card,.steps{background:white;border:1px solid #e0e6f1;border-radius:20px;padding:28px}
+.card h2{font-size:23px;margin:14px 0 8px}.number{font-size:13px;color:#7887ab;font-weight:700}.card p{min-height:78px;margin-top:10px}
+a.button{display:inline-block;color:white;background:#526ae1;padding:13px 19px;text-decoration:none;border-radius:10px;font-weight:600;font-size:14px}
+a.button.secondary{background:#e8f6f0;color:#26785b}a{color:#425dc3}h2{font-size:24px}.steps h2{margin-top:0}.steps li{padding:7px 0;line-height:1.6;color:#4c5e78}
+.proof{display:flex;gap:14px;flex-wrap:wrap;margin:24px 0}.proof span{font-size:13px;background:#e8f6f0;color:#286a53;padding:8px 12px;border-radius:8px}
+.foot{font-size:13px;margin-top:22px}.note{border-left:3px solid #b4a6e7;padding-left:15px;color:#635c80;font-size:14px}code{background:#f0f3fa;border-radius:4px;padding:2px 5px;font-size:.92em}
+@media(max-width:690px){body{padding:28px 18px}h1{font-size:36px}.cards{grid-template-columns:1fr}.card p{min-height:0}}
+</style><main>
+<div class="eyebrow">Recursive Cognitive Optimization</div>
+<h1>RCO Desktop</h1><span class="tag">0.1.0 · Prototype publication package</span>
+<p class="lead">Your source repository and Windows app, packed for GitHub. The coordinator works with your existing Codex and Claude Code desktop sessions.</p>
+<div class="cards">
+<section class="card"><div class="number">01 / REPOSITORY</div><h2>Source for GitHub</h2>
+<p>The Python app, reused RCO engine, ASIC example, tests, documentation and GitHub build workflows. Extract this ZIP and upload its contents.</p>
+<a class="button" href="rco-desktop-0.1.0-source.zip" download>Open source package</a></section>
+<section class="card"><div class="number">02 / WINDOWS DOWNLOAD</div><h2>The double-click app</h2>
+<p>The executable, bundled Python, supporting files and dependency notices. Attach this ZIP to your GitHub Release for people to download.</p>
+<a class="button secondary" href="rco-desktop-0.1.0-windows-x64.zip" download>Open Windows package</a></section>
+</div>
+<section class="steps"><h2>Publish with clicks</h2><ol>
+<li><a href="https://github.com/new" target="_blank" rel="noopener">Create a GitHub repository</a>, for example <strong>rco-desktop</strong>. Leave its generated README and ignore file options empty.</li>
+<li>Extract the <strong>source ZIP</strong>. Open its <code>rco-desktop</code> folder until you see README.md. Upload those contents using GitHub’s <strong>Upload files</strong> page. Include the folders and files beginning with a dot.</li>
+<li>Open the repository’s <strong>Releases</strong> page, draft version <strong>v0.1.0</strong>, and mark it as a pre-release.</li>
+<li>Attach both ZIPs, <a href="SHA256SUMS.txt">SHA256SUMS.txt</a> and <a href="VALIDATION.json">VALIDATION.json</a>. Review the release and publish it.</li>
+</ol><p class="note">A license for the original application code has not been selected. Choose one before describing the project as open source. Existing third-party notices are included.</p></section>
+<div class="proof"><span>30 source tests passed</span><span>6 packaged executable checks passed</span><span>Private configuration and history excluded</span></div>
+<p class="foot">To use the Windows app: extract its entire ZIP and double-click <strong>RCO Middleware.exe</strong>. Complete the visual setup, restart the desktop apps, then send the connection message shown for each app. Keep all supporting folders beside the executable.</p>
+<p class="foot">The bundled example performs a bounded static ASIC configuration correction. Live desktop reconnection was not retested for this release; hardware checks are unrun. The application is unsigned. Detailed guides are inside the source package’s <strong>docs</strong> folder.</p>
+</main></html>

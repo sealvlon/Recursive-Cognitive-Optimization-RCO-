@@ -1,0 +1,51 @@
+{
+  "profile_version": "1.0.0",
+  "project": "jane_street_protocol_emulator",
+  "checked_local_date": "2026-09-18",
+  "checked_timezone": "America/New_York",
+  "checked_utc_date": "2026-09-19",
+  "official": {
+    "announcement": "https://blog.janestreet.com/protocol-emulator-asic-competition/",
+    "template": "https://github.com/TinyTapeout/ttihp-verilog-template/tree/cmos5l",
+    "process": "IHP 130nm CMOS5L",
+    "tiles": "6x4",
+    "8x4_status": "Possible future increase; not currently allowed",
+    "open_source": true,
+    "deadline": "2027-01-18",
+    "submission_form_status": "Not yet published on announcement page",
+    "shuttle_target": "March 2027; subject to foundry schedule",
+    "starting_protocols": ["UART", "SPI", "I2C"],
+    "numeric_competition_score": null
+  },
+  "template_interface": {
+    "source": "https://raw.githubusercontent.com/TinyTapeout/ttihp-verilog-template/cmos5l/src/project.v",
+    "dedicated_inputs": 8,
+    "dedicated_outputs": 8,
+    "bidirectional": 8,
+    "clock": "clk",
+    "reset": "rst_n",
+    "additional_wrapper_signal": "ena",
+    "output_enable_active_high": true,
+    "top_module_prefix": "tt_um_"
+  },
+  "support_table": {
+    "source": "https://raw.githubusercontent.com/htfab/tt-support-tools/cmos/tech/ihp-sg13cmos5l/tile_sizes.yaml",
+    "6x4_boundary_um": [1289.28, 710.64],
+    "8x4_present": false,
+    "evidence_boundary": "Floorplan dimensions only, not measured usable logic area"
+  },
+  "project_targets_not_official_requirements": {
+    "accord_version": "1.06",
+    "accord_clock_hz": 60000000,
+    "uart_rtl_clock_hz": 50000000,
+    "rationale": "Preserve existing architecture and RTL; do not treat targets or model results as physical measurements"
+  },
+  "permissions": {
+    "publish": false,
+    "submit_competition_entry": false,
+    "change_credentials": false,
+    "spend_money": false,
+    "modify_baseline": false,
+    "modify_evaluator_during_run": false
+  }
+}

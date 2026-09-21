@@ -1,0 +1,24 @@
+# Versioned provisional RCO skill format. Portable static example only.
+format = "rco-provisional-0"
+name = "JSASIC"
+description = "Propose and review the bundled ASIC fixture's one-field project.tiles correction from 8x4 to 6x4. The coordinator supplies the frozen task packet and performs candidate edits and checks. Agents return text only."
+when_it_fits = "The bundled desktop example is selected and the task packet identifies its frozen fixture revision."
+inputs = [
+  "middleware/profiles/jane_street/project_brief.md",
+  "middleware/profiles/jane_street/requirements.json: dated requirements snapshot",
+  "middleware/evidence/asic/baseline_manifest.json: frozen file inventory and hashes",
+  "The coordinator task packet, proposal, and static check results",
+]
+outputs = [
+  "A concise proposal or adversarial review tied to the exact permitted delta",
+  "Reviewer JSON: approved (boolean), summary (string), objections (list)",
+  "Explicit unresolved objections and unrun hardware checks",
+]
+good_result = "Only info.yaml project.tiles changes from 8x4 to 6x4; every other fixture byte and the complete file inventory are preserved. The independent evaluator passes. Conclusions remain limited to static configuration."
+model_preference = "either"
+acts_on_world = false
+may_touch = []
+
+[agents]
+builder = "Propose the exact one-field correction and its rationale. On the evidence turn, assess the supplied evaluator result. Do not execute tools or edit files. Do not claim RTL correctness, chip area fit, timing closure, physical verification, or tapeout readiness."
+reviewer = "Adversarially review the proposal or supplied evidence against the frozen task packet. Return JSON with approved, summary, and objections. Approve only when the exact permitted delta is justified and no objections remain. Reject ambiguous requirements, unrelated changes, missing evidence, or claims beyond static configuration. Do not execute tools or edit files."

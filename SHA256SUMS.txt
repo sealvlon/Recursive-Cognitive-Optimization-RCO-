@@ -1,0 +1,3 @@
+73a22abc9b602aec61c13fe66e099584a6fe9585ef9fefaf09655cb3e6c8e894  rco-desktop-0.1.0-source.zip
+c531877b23ca95e0d4022e4164c2a1db82b86dc015957e5f4138702b0868e68e  rco-desktop-0.1.0-windows-x64.zip
+f2e06f7e05a4aaa15abc8bde7d9bdb65d9580c3f09add2392a94f85068b24628  VALIDATION.json

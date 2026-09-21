@@ -1,0 +1,41 @@
+schema = 1
+[shared]
+console_started = "[INFO] MCP server started (local)"
+console_waiting = "[INFO] Waiting for model connections..."
+console_ready = ["", "Ready to route skills and manage sessions."]
+console_connected = "[INFO] {display_name} connected ({handle})"
+check_prefix = "✓ "
+checks = ["Connected to Python MCP server (local)",
+          "Available skills: {skill_count} (will load dynamically)",
+          "Ready to receive tasks."]
+result_layout = ["{init_line}", "{checks}", "", "{footer}"]
+[[client]]
+id = "c"
+display_name = "Claude"
+handle = "middleware-c"
+auth_env = "RCO_TOKEN_C"
+invocation_names = ["Claude"]
+client_info_hints = ["claude-code"]
+invocation_hint = "type /middleware Claude in a Claude Code session"
+reconnect_hint = "Claude: /mcp -> Reconnect, or a new session"
+init_line = "MCP server for Claude initialized."
+footer = "You can now start using skills and routing requests."
+turn_command = "/rco-turn"
+turn_hint = "in your Claude Code session (Jane Street ASIC or RCO folder), type /rco-turn"
+turn_wait_max_s = 0
+turn_offer_lease_s = 60
+[[client]]
+id = "o"
+display_name = "OpenAI/Codex"
+handle = "middleware-o"
+auth_env = "RCO_TOKEN_O"
+invocation_names = ["OpenAI"]
+client_info_hints = ["codex-mcp-client"]
+invocation_hint = "type $middleware OpenAI in a Codex thread"
+reconnect_hint = "Codex: open a new thread"
+init_line = "MCP server for OpenAI (Codex) initialized."
+footer = "You can now start using skills and work with Claude through the middleware."
+turn_command = "$rco-turn"
+turn_hint = "in a Codex thread, type $rco-turn"
+turn_wait_max_s = 0
+turn_offer_lease_s = 60

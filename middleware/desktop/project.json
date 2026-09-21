@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "profile_module": "middleware.desktop.profile",
+  "profile_class": "AsicProfile",
+  "description": "First bounded application: Jane Street ASIC template correction. The desktop coordinator routes generic profile steps."
+}

@@ -1,0 +1,41 @@
+# Python and local development environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Builds and release artifacts
+dist/
+build/
+.build/
+*.spec
+*.exe
+*.zip
+middleware/.build/
+middleware/.build-deps/
+middleware/.test-deps/
+
+# Local app configuration, credentials, history and generated work
+.env
+.env.*
+!.env.example
+.codex/
+.claude/
+.rco/
+.rco-desktop/
+*.log
+middleware/.state/
+middleware/desktop/config/
+middleware/candidates/
+middleware/evidence/desktop-build.json
+middleware/evidence/desktop-launch.json
+
+# Editor and operating-system files
+.idea/
+/.vscode/
+Thumbs.db
+Desktop.ini
+.DS_Store

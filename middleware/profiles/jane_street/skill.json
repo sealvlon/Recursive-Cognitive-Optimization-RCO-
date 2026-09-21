@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "name": "JSASIC",
+  "version": "1.0.0",
+  "purpose": "Text-only proposal and review for the bundled frozen ASIC configuration example.",
+  "inputs": [
+    "middleware/profiles/jane_street/project_brief.md",
+    "middleware/profiles/jane_street/requirements.json",
+    "The coordinator task packet, artifact revision, and evidence references"
+  ],
+  "outputs": [
+    "concise proposal or adversarial review with artifact references",
+    "explicit unresolved objections and requested next action",
+    "no claim that model agreement or a static check proves hardware correctness"
+  ],
+  "capabilities": [
+    "text_review",
+    "artifact_reasoning"
+  ],
+  "permissions": {
+    "model_tools": [],
+    "write_paths": []
+  },
+  "evaluation_hooks": [
+    "middleware/profiles/jane_street/verify_template_candidate.py"
+  ],
+  "source": {
+    "format": "rco-provisional-0",
+    "path": "skills/JSASIC.skill.toml",
+    "note": "Portable desktop example; the task packet and frozen profile acceptance criteria take precedence."
+  },
+  "instructions": "Builder and reviewer roles are provider-independent. Review only the declared info.yaml project.tiles change from 8x4 to 6x4 against the frozen fixture and acceptance criteria. Return text only. Do not execute tools, edit files, change the evaluator, publish, submit, or promote artifacts. Python applies the permitted candidate change and evaluates it. Preserve every other fixture byte, including historical comments. Do not invent numerical competition scores or claim this check proves RTL correctness, hardware fit, timing, physical verification, or a completed live desktop-agent exchange."
+}

@@ -1,0 +1,59 @@
+# Tiny Tapeout project information
+project:
+  title:        "RCO Protocol Emulator"
+  author:       "sealvlon"
+  discord:      ""
+  description:  "Programmable protocol-emulator ASIC (Jane Street competition). Current RTL: UART TX hello-world."
+  language:     "Verilog"
+  clock_hz:     50000000
+
+  # Jane Street competition allocation. NOTE: as of 2026-09-12 the CMOS5L tile
+  # table in tt-support-tools stops at 6x4/8x2, so CI will reject 8x4 until TT
+  # adds it (or via a tools fork with the SG13G2 8x4 geometry: 1724.16x710.64).
+  tiles: "8x4"
+
+  # Your top module name must start with "tt_um_". Make it unique by including your github username:
+  top_module:  "tt_um_sealvlon_rco_pe"
+
+  # List your project's source files here.
+  # Source files must be in ./src and you must list each source file separately, one per line.
+  # Don't forget to also update `PROJECT_SOURCES` in test/Makefile.
+  source_files:
+    - "project.v"
+    - "uart_tx.v"
+
+# The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
+# This section is for the datasheet/website. Use descriptive names (e.g., RX, TX, MOSI, SCL, SEG_A, etc.).
+pinout:
+  # Inputs
+  ui[0]: "TX data bit 0"
+  ui[1]: "TX data bit 1"
+  ui[2]: "TX data bit 2"
+  ui[3]: "TX data bit 3"
+  ui[4]: "TX data bit 4"
+  ui[5]: "TX data bit 5"
+  ui[6]: "TX data bit 6"
+  ui[7]: "TX data bit 7"
+
+  # Outputs
+  uo[0]: "UART TX (mirror)"
+  uo[1]: ""
+  uo[2]: ""
+  uo[3]: ""
+  uo[4]: "UART TX"
+  uo[5]: "TX busy"
+  uo[6]: ""
+  uo[7]: ""
+
+  # Bidirectional pins
+  uio[0]: "TX send enable (input)"
+  uio[1]: ""
+  uio[2]: ""
+  uio[3]: ""
+  uio[4]: ""
+  uio[5]: ""
+  uio[6]: ""
+  uio[7]: ""
+
+# Do not change!
+yaml_version: 6

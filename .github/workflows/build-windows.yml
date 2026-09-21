@@ -1,0 +1,39 @@
+name: Build Windows packages
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.14'
+          architecture: x64
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            requirements-dev.txt
+      - name: Install dependencies
+        run: python -m pip install -r requirements-dev.txt
+      - name: Test and build release packages
+        run: python scripts/build_release.py
+      - name: Upload packages for review
+        uses: actions/upload-artifact@v7
+        with:
+          name: rco-desktop-windows-packages
+          path: |
+            dist/rco-desktop-*-source.zip
+            dist/rco-desktop-*-windows-x64.zip
+            dist/SHA256SUMS.txt
+            dist/VALIDATION.json
+          if-no-files-found: error
+          retention-days: 30

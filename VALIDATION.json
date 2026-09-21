@@ -1,0 +1,35 @@
+{
+  "passed": true,
+  "python": "3.14.3",
+  "checks": [
+    {
+      "name": "runtime_imports",
+      "passed": true
+    },
+    {
+      "name": "bundled_tcl_runtime",
+      "passed": true
+    },
+    {
+      "name": "release_assets",
+      "passed": true
+    },
+    {
+      "name": "frozen_fixture_integrity",
+      "passed": true
+    },
+    {
+      "name": "four_step_static_fixture_flow",
+      "passed": true
+    },
+    {
+      "name": "candidate_tamper_rejected",
+      "passed": true
+    }
+  ],
+  "evidence_level": "offline_package_and_static_fixture_only",
+  "live_desktop_agents_tested": false,
+  "hardware_checks_tested": false,
+  "version": "0.1.0",
+  "executable_sha256": "ec83c36dfe73edf573c2d2deb739f5d25d25a936c52985f765279dc00b24cb55"
+}
