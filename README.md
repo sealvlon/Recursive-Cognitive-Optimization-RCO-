@@ -1,7 +1,6 @@
 # Recursive Cognitive Optimization (RCO)
 Recursive Cognitive Optimization (RCO) is local, MCP-based orchestration middleware, a coordination layer designed to connect AI desktop apps such as Claude Code and Codex and make them work as a human-directed reasoning team. One model proposes, another challenges, tools and evidence verify, and the work is refined through repeated rounds while the user controls the goal, boundaries, and final decision. By working through desktop apps, RCO lets people use subscriptions they already pay for, potentially reducing the need for separate API keys and additional pay-as-you-go model costs. Auto-modo available. 
 
-
 # RCO Desktop
 
 A visual Python coordinator for **Claude Code in the Claude desktop app** and **Codex desktop**. Open the Windows app, connect the two desktop sessions, and follow their work in one local dashboard.
@@ -18,6 +17,12 @@ RCO supplies the shared queue, handoffs, checkpoints and evidence record. The de
 The dashboard waits until both agents are listening. The queued example then starts. Desktop apps may ask you to approve their connection or permissions, and must remain open while working. Setup or a changed connection can require restarting those apps.
 
 [Getting started and troubleshooting](docs/GETTING_STARTED.md)
+
+Download the source code and Windows app at alvlon.com:
+
+http://www.alvlon.com/rco-desktop-0.1.0-source.zip — Source code.
+
+http://www.alvlon.com/rco-desktop-0.1.0-windows-x64.zip — Windows app. Extract the ZIP and double-click RCO Middleware.exe.
 
 ## What you can control
 
